@@ -12,47 +12,51 @@
 #include <ctype.h>
 #include "linkedlist.h"
 
+
+
+
 //Standard linked list functions
 
-LLNode* createNode(int arrival, int burst){
-    //Mallocs a new LLNode struct and retuns
+Process* createProcess(int arrival, int burst){
+    //Mallocs a new Process struct and retuns
     //a pointer to the new struct
 
 
-    LLNode* newNode = (LLNode*)malloc(sizeof(LLNode));
+    Process* process = (Process*)malloc(sizeof(Process));
     
-    newNode->next = NULL;
-    newNode->arrival = arrival;
-    newNode->burst = burst;
-    newNode->remaining = burst;
+    process->next = NULL;
+    process->arrival = arrival;
+    process->burst = burst;
+    process->remaining = burst;
     
-    return newNode;
+    return process;
 }
 
-void addNode(LLNode* node, int arrival, int burst){
+void addProcess(Process** list, Process* newProcess){
     //Loops through the linked list and adds a new
     //node to the end
     //returns void
-
-    LLNode* newNode = (LLNode*)malloc(sizeof(LLNode));
+    Process* current;
     
-    newNode->next = NULL;
-    newNode->arrival = arrival;
-    newNode->burst = burst;
-    newNode->remaining = burst;
-
-    while (node->next!=NULL) {
-        node = node->next;
+    if(*list == NULL){
+        *list = newProcess;
+    }else{
+        
+        current = *list;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newProcess;
     }
-    node->next = newNode;
+
 }
 
-void deleteList(LLNode* node){
+void deleteList(Process* node){
     //Loops thorugh the linked list and
     //deletes every node
     //returns void
 
-    LLNode* temp;
+    Process* temp;
 
     while (node->next!=NULL) {
         temp = node->next;

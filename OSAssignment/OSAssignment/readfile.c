@@ -12,31 +12,34 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "linkedlist.h"
+#include "scheduler.h"
 
 //Parses the passed file into a linked list
 //This fucntion expects the file to contain a
 //"\n" seperated list of doubles
 
-LLNode* parseFile(char* fileName){
+Scheduler* parseFile(char* fileName){
     FILE* file;
     int ii;
-    double tempDouble;
-    LLNode* listHead = NULL;
+    int arrival;
+    int burst;
+    Scheduler* rrScheduler = NULL;
     
     file = fopen(fileName, "r");
     
     if(file==NULL){
         perror(fileName);
-        return listHead;
     }
     
-    for(ii=0;fscanf(file, "%lf", &tempDouble)==1;ii++){
-        if(ii==0){
-            listHead = createNode(tempDouble);
-        }else{
-            addNode(listHead, tempDouble);
-        }
+    rrScheduler = (Scheduler*)malloc(sizeof(Scheduler));
+    rrScheduler->processList = NULL;
+    
+    fscanf(file, "%d", &rrScheduler->timeQuantum);
+        
+    for(ii=0;fscanf(file, "%d %d", &arrival, &burst)==2;ii++){
+        
+        Process* newProcess = createProcess(arrival, burst);
+        addProcess(&rrScheduler->processList, newProcess);
     }
-
-    return listHead;
+    return rrScheduler;
 }

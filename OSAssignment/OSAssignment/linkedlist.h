@@ -14,16 +14,18 @@
 //It doesn't have a struct for
 //keeping track of the head/tail
 
-typedef struct Node {
-    struct Node* next;
+typedef struct Process {
+    struct Process* next;
     int arrival;
     int burst;
     int remaining;
     
-} LLNode;
+} Process;
 
-LLNode* createNode(int arrival, int burst);
-void addNode(LLNode* node, int arrival, int burst);
-void deleteList(LLNode* node);
+
+
+Process* createProcess(int arrival, int burst);
+void addProcess(Process** list, Process* newProcess);
+void deleteList(Process* node);
 
 #endif

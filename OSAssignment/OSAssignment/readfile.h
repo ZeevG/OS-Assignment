@@ -6,9 +6,10 @@
 //  Copyright (c) 2014 Work. All rights reserved.
 //
 
-#ifndef PDM_Assignment_readfile_h
-#define PDM_Assignment_readfile_h
+#ifndef OSAssignment_readfile_h
+#define OSAssignment_readfile_h
+#include "scheduler.h"
 
-LLNode* parseFile(char* fileName);
+Scheduler* parseFile(char* fileName);
 
 #endif

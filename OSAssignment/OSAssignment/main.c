@@ -7,10 +7,21 @@
 //
 
 #include <stdio.h>
+#include "readfile.h"
+#include "linkedlist.h"
+#include "scheduler.h"
 
 
 int main(int argc, const char * argv[])
 {
-     
-    return 0;
+
+    Scheduler* rrSched;
+    rrSched = parseFile("test.txt");
+    
+    
+    run(rrSched);
+    
+    
+    return  0;
+
 }
