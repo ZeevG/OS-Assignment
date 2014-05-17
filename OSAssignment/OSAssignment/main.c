@@ -10,6 +10,7 @@
 #include "readfile.h"
 #include "linkedlist.h"
 #include "scheduler.h"
+#include "stats.h"
 
 
 int main(int argc, const char * argv[])
