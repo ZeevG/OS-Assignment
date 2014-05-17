@@ -32,14 +32,14 @@ Scheduler* parseFile(char* fileName){
     }
     
     rrScheduler = (Scheduler*)malloc(sizeof(Scheduler));
-    rrScheduler->processList = NULL;
+    rrScheduler->processList = initProcessQueue();
     
     fscanf(file, "%d", &rrScheduler->timeQuantum);
         
     for(ii=0;fscanf(file, "%d %d", &arrival, &burst)==2;ii++){
         
-        Process* newProcess = createProcess(arrival, burst);
-        addProcess(&rrScheduler->processList, newProcess);
+        Process* newProcess = createProcess(arrival, burst, ii);
+        rrScheduler->processList->enqueueSortedArrival(rrScheduler->processList, newProcess);
     }
     return rrScheduler;
 }

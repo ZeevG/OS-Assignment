@@ -16,16 +16,20 @@
 
 typedef struct Process {
     struct Process* next;
+    int id;
     int arrival;
     int burst;
+    int waiting;
     int remaining;
+
     
 } Process;
 
 
 
-Process* createProcess(int arrival, int burst);
+Process* createProcess(int arrival, int burst, int id);
 void addProcess(Process** list, Process* newProcess);
 void deleteList(Process* node);
+void addProcessSorted(Process** list, Process* newProcess);
 
 #endif

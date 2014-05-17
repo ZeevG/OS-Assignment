@@ -17,7 +17,7 @@
 
 //Standard linked list functions
 
-Process* createProcess(int arrival, int burst){
+Process* createProcess(int arrival, int burst, int id){
     //Mallocs a new Process struct and retuns
     //a pointer to the new struct
 
@@ -25,11 +25,40 @@ Process* createProcess(int arrival, int burst){
     Process* process = (Process*)malloc(sizeof(Process));
     
     process->next = NULL;
+    process->id = id;
     process->arrival = arrival;
     process->burst = burst;
     process->remaining = burst;
+    process->waiting = 0;
     
     return process;
+}
+
+void addProcessSorted(Process** list, Process* newProcess){
+    Process* current;
+    
+    if(*list == NULL){
+        *list = newProcess;
+    }else{
+        
+        current = *list;
+        for (current = *list; current != NULL; current = current->next) {
+            
+            // Append at the end
+            if (current->next == NULL){
+                current->next = newProcess;
+                break;
+            }
+
+            //Break if we found a place to insert it.
+            if (current->arrival <= newProcess->arrival && current->next->arrival > newProcess->arrival) {
+                newProcess->next = current->next;
+                current->next = newProcess;
+                break;
+            }
+        }
+    }
+    
 }
 
 void addProcess(Process** list, Process* newProcess){

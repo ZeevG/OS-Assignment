@@ -23,8 +23,9 @@ typedef struct Scheduler{
     int time;
     int timeQuantum;
     Process* currentProcess;
-    Process* processList;
+    ProcessQueue* processList;
     ProcessQueue* readyQueue;
+    ProcessQueue* finishedQueue;
 } Scheduler;
 
 typedef struct TimeSlice{

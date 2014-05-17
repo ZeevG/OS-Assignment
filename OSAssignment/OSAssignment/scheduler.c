@@ -15,107 +15,76 @@
 
 void run(Scheduler* self){
     self->readyQueue = initProcessQueue();
+    self->finishedQueue = initProcessQueue();
     self->time = 0;
     self->complete = 0;
     self->currentProcess = NULL;
     
-    while(self->complete < 3){
+    while(self->complete == 0){
         
         
         updateTime(self);
         
-//        self->currentProcess = self->readyQueue->dequeue(self->readyQueue);
-//        
-//        
-//        step(self);
-        
-        self->complete++;
-        
-        
+        step(self);
+
         
         
     }
 }
 
 void updateTime(Scheduler* self){
+    Process* next = NULL;
+
     self->time++;
     
-    for (Process* process = self->processList; process != NULL; process = process->next) {
-        if(process->arrival == self->time){
-            self->readyQueue->enqueueCopy(self->readyQueue, process);
+    while (self->processList->length > 0 && next == NULL) {
+        next = self->processList->start;
+
+        if(next->arrival == self->time){
+            //Dequeue the next process
+            //Copy it to the ready queue
+            //Free the original
+            next = self->processList->dequeue(self->processList);
+            self->readyQueue->enqueueCopy(self->readyQueue, next);
+            free(next);
+            next = NULL;
         }
     }
     
 }
 void step(Scheduler* self){
+    // If there is no current process, then get one.
+    if(self->currentProcess==NULL){
+        self->currentProcess = self->readyQueue->dequeue(self->readyQueue);
+        printf("Loading Process: Process ID %d\n", self->currentProcess->id);
+    }
+    
     self->currentProcess->remaining--;
+    self->readyQueue->incrementWaiting(self->readyQueue);
+    
+    //This process has completed
+    if(self->currentProcess->remaining == 0){
+        printf("Process Complete!\nProcess ID: %d\n", self->currentProcess->id);
+        printf("Scheduler Time: %d\nProcess Burst Time: %d\n", self->time, self->currentProcess->burst);
+        printf("Process Arrival Time: %d\nProcess Waiting Time: %d\n", self->currentProcess->arrival, self->currentProcess->waiting);
+        self->finishedQueue->enqueueCopy(self->finishedQueue, self->currentProcess);
+        free(self->currentProcess);
+        self->currentProcess = NULL;
+    }
+    
+    //prempting this process
+    //Assuming we don't put the process back on the ready queue if the ready queue is empty
+    if (self->time % self->timeQuantum == 0 && self->readyQueue->length != 0) {
+        printf("PREEMPTION: Process ID %d\n", self->currentProcess->id);
+        
+        self->readyQueue->enqueueCopy(self->readyQueue, self->currentProcess);
+        free(self->currentProcess);
+        self->currentProcess = NULL;
+    }
+    
+    if(self->readyQueue->length == 0 && self->currentProcess == NULL){
+        self->complete = 1;
+        printf("Scheduler Complete\n");
+    }
+    
 }
-
-
-
-
-
-//void runRRScheduler(Process * ProcessList){
-//    Process * unspawnedProcesses;
-//    
-//    
-//    
-//}
-
-
-
-
-
-//Old things
-
-//void printGantt(Scheduler* sched){
-//
-//    int ii = 0;
-//    
-//    TimeSlice* gantt = NULL;
-//    
-//    
-//    Process* process = sched->processList;
-//    
-//    while (process != NULL) {
-//        addTimeSlice(gantt, ii, process->burst);
-//        process = process->next;
-//        ii++;
-//    }
-//}
-//
-//void addProcess(Scheduler* sched, int arrival, int burst){
-//
-//    if(sched->processNumber==0){
-//        sched->processList = createNode(arrival, burst);
-//    }else{
-//        addNode(sched->processList, arrival, burst);
-//    }
-//    
-//    sched->processNumber++;
-//
-//}
-//
-//void deleteScheduler(Scheduler* sched){
-//    deleteList(sched->processList);
-//    free(sched);
-//}
-//
-//void addTimeSlice(TimeSlice* list, int number, int burst){
-//    
-//    TimeSlice* newTimeSlice = (TimeSlice*)malloc(sizeof(TimeSlice));
-//    newTimeSlice->processNumber = number;
-//    newTimeSlice->cpuBurst = burst;
-//    newTimeSlice->next = NULL;
-//    
-//    if (list == NULL){
-//        list = newTimeSlice;
-//
-//        printf("things! %d\n", list->processNumber);
-//    }else{
-//        while (list->next != NULL) {
-//            list = list->next;
-//        }
-//        list->next = newTimeSlice;
-//    }
-//}

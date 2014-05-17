@@ -18,6 +18,11 @@ void enqueue(ProcessQueue* self, Process* newProcess){
     self->length++;
 }
 
+void enqueueSortedArrival(ProcessQueue* self, Process* newProcess){
+    addProcessSorted(&self->start, newProcess);
+    self->length++;
+}
+
 void enqueueCopy(ProcessQueue* self, Process* newProcess){
     Process* tempProcess = (Process*)malloc(sizeof(Process));
     memcpy(tempProcess, newProcess, sizeof(Process));
@@ -26,6 +31,14 @@ void enqueueCopy(ProcessQueue* self, Process* newProcess){
     
     addProcess(&self->start, tempProcess);
     self->length++;
+}
+
+void incrementWaiting(ProcessQueue* self){
+    Process* node = NULL;
+    
+    for (node = self->start; node != NULL; node = node->next) {
+        node->waiting++;
+    }
 }
 
 Process* dequeue(ProcessQueue* self){
@@ -50,6 +63,8 @@ ProcessQueue * initProcessQueue(){
     queue->enqueue = enqueue;
     queue->enqueueCopy = enqueueCopy;
     queue->dequeue = dequeue;
+    queue->incrementWaiting = incrementWaiting;
+    queue->enqueueSortedArrival = enqueueSortedArrival;
 
     return queue;
 

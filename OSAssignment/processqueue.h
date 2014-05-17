@@ -16,6 +16,8 @@ typedef struct ProcessQueue {
     int length;
     void (* enqueue)();
     void (* enqueueCopy)();
+    void (* incrementWaiting)();
+    void (* enqueueSortedArrival)();
     Process* (* dequeue)();
 } ProcessQueue;
 
@@ -23,6 +25,7 @@ void enqueue(ProcessQueue*, Process*);
 Process* dequeue(ProcessQueue*);
 ProcessQueue * initProcessQueue();
 void enqueueCopy(ProcessQueue* self, Process* newProcess);
+void enqueueSortedArrival(ProcessQueue* self, Process* newProcess);
 
 
 
